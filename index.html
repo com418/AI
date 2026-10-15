@@ -23,7 +23,7 @@
  <header class="top"><div><strong>Apex AI</strong><br><small>Ask anything</small></div><span class="pill">AI Assistant</span></header>
  <section class="workspace">
   <div class="welcome" id="welcome">
-   <div class="symbol"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2.5 14.7 9l6.8 3-6.8 3-2.7 6.5L9.3 15 2.5 12l6.8-3L12 2.5Z"/><path d="m19 2 .7 2.3L22 5l-2.3.7L19 8l-.7-2.3L16 5l2.3-.7L19 2Z"/></svg></div>
+   <div class="symbol"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2.5 14.7 9l6.8 3-6.8 3-2.7 6.5L9.3 15 2.5 12l6.8-3L12 2.5Z"/><path d="m19 2.7 2.3L22 5l-2.3.7L19 8l-.7-2.3L16 5l2.3-.7L19 2Z"/></svg></div>
    <h1>What’s on your mind?</h1><p>Ask a question, explore an idea, or create something new.</p>
   </div>
   <div class="suggestions" id="suggestions">
@@ -39,11 +39,60 @@
 </main>
 </div>
 <script>
+// ========= PUT YOUR FREE.AI DETAILS HERE =========
+const FREE_API_URL = "https://api.free.ai/v1/chat/completions"; // Change this to your provider URL
+const FREE_API_KEY = "sk-free-6f9c0abdba311c057d2fa1f1b56e713f81ed7a239720a1da"; // Paste your key here
+const FREE_MODEL = "gpt-3.5-turbo"; // Your model name
+// ================================================
+
 const chat=document.getElementById("chat"),promptBox=document.getElementById("prompt"),sendButton=document.getElementById("send"),statusBox=document.getElementById("status");
 let history=[];
 function addMessage(role,text){const el=document.createElement("div");el.className="message "+(role==="user"?"user":"ai");if(role!=="user"){const who=document.createElement("div");who.className="who";who.textContent="Apex AI";el.appendChild(who)}const body=document.createElement("div");body.textContent=text;el.appendChild(body);chat.appendChild(el);el.scrollIntoView({behavior:"smooth",block:"nearest"});return body}
-async function sendMessage(textOverride){const text=(textOverride??promptBox.value).trim();if(!text||sendButton.disabled)return;document.getElementById("welcome").style.display="none";document.getElementById("suggestions").style.display="none";addMessage("user",text);promptBox.value="";history.push({role:"user",content:text});sendButton.disabled=true;statusBox.textContent="Thinking…";const answerEl=addMessage("assistant","");answerEl.textContent="Thinking…";try{const res=await fetch("/.netlify/functions/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:history})});const data=await res.json().catch(()=>({}));if(!res.ok)throw new Error(data.error||"The AI service is unavailable. Please try again.");if(!data.reply)throw new Error("The AI returned an empty answer. Please try again.");answerEl.textContent=data.reply;history.push({role:"assistant",content:data.reply});statusBox.textContent=""}catch(err){answerEl.textContent="Sorry, I couldn’t get an answer right now.";statusBox.textContent=err.message||"Check your connection and try again.";history.pop()}finally{sendButton.disabled=false;promptBox.focus()}}
-sendButton.addEventListener("click",()=>sendMessage());promptBox.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage()}});document.getElementById("newChat").addEventListener("click",()=>{chat.innerHTML="";history=[];statusBox.textContent="";promptBox.value="";document.getElementById("welcome").style.display="";document.getElementById("suggestions").style.display=""});document.querySelectorAll("[data-prompt]").forEach(b=>b.addEventListener("click",()=>{promptBox.value=b.dataset.prompt;sendMessage(b.dataset.prompt)}));
+async function sendMessage(textOverride){
+ const text=(textOverride??promptBox.value).trim();
+ if(!text||sendButton.disabled)return;
+ document.getElementById("welcome").style.display="none";
+ document.getElementById("suggestions").style.display="none";
+ addMessage("user",text);
+ promptBox.value="";
+ history.push({role:"user",content:text});
+ sendButton.disabled=true;
+ statusBox.textContent="Thinking…";
+ const answerEl=addMessage("assistant","");
+ answerEl.textContent="Thinking…";
+ try{
+   // This calls your Free.ai directly
+   const res=await fetch(FREE_API_URL,{
+     method:"POST",
+     headers:{
+       "Content-Type":"application/json",
+       "Authorization":`Bearer ${FREE_API_KEY}`
+     },
+     body:JSON.stringify({
+       model:FREE_MODEL,
+       messages:history
+     })
+   });
+   const data=await res.json().catch(()=>({}));
+   if(!res.ok)throw new Error(data.error?.message||"API error: "+res.status);
+   const reply = data.choices?.[0]?.message?.content || data.reply;
+   if(!reply)throw new Error("Empty reply from API");
+   answerEl.textContent=reply;
+   history.push({role:"assistant",content:reply});
+   statusBox.textContent=""
+ }catch(err){
+   answerEl.textContent="Sorry, I couldn’t get an answer right now.";
+   statusBox.textContent=err.message||"Check your API key and URL";
+   history.pop()
+ }finally{
+   sendButton.disabled=false;
+   promptBox.focus()
+ }
+}
+sendButton.addEventListener("click",()=>sendMessage());
+promptBox.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage()}});
+document.getElementById("newChat").addEventListener("click",()=>{chat.innerHTML="";history=[];statusBox.textContent="";promptBox.value="";document.getElementById("welcome").style.display="";document.getElementById("suggestions").style.display=""});
+document.querySelectorAll("[data-prompt]").forEach(b=>b.addEventListener("click",()=>{promptBox.value=b.dataset.prompt;sendMessage(b.dataset.prompt)}));
 </script>
 </body>
 </html>
