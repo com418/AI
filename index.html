@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101010">
+<title>Apex AI</title>
+<style>
+:root{color-scheme:dark;--bg:#101010;--panel:#181818;--line:#303030;--text:#f3f3f3;--muted:#a0a0a0;--accent:#d9f36a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100dvh}button,textarea{font:inherit}button{cursor:pointer}.layout{min-height:100dvh;display:grid;grid-template-columns:250px 1fr}.sidebar{background:#141414;border-right:1px solid #292929;padding:20px 14px;display:flex;flex-direction:column;gap:22px}.brand{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:800;padding:2px 8px}.brandmark{width:34px;height:34px;border-radius:12px;background:var(--accent);display:grid;place-items:center;color:#101010}.newchat{border:1px solid #3a3a3a;background:#202020;color:#f5f5f5;border-radius:12px;padding:11px 13px;text-align:left}.label{font-size:11px;color:#888;letter-spacing:1.4px;font-weight:700;padding:0 9px}.sidebottom{margin-top:auto;color:#858585;font-size:12px;padding:8px}.main{display:flex;flex-direction:column;min-width:0;min-height:100dvh}.top{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 25px;border-bottom:1px solid #292929}.top small{color:#969696}.pill{border:1px solid #333;border-radius:999px;padding:6px 11px;font-size:12px;color:#bcbcbc}.workspace{width:min(850px,100%);margin:0 auto;padding:28px 22px 16px;display:flex;flex-direction:column;flex:1}.welcome{margin:auto auto 28px;text-align:center;width:100%}.symbol{width:56px;height:56px;border-radius:19px;background:var(--accent);display:grid;place-items:center;margin:0 auto 20px;color:#111}.welcome h1{font-size:clamp(30px,5vw,45px);letter-spacing:-1.4px;line-height:1.1;margin:0 0 12px}.welcome p{color:#aaa;margin:0;font-size:15px}.suggestions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;max-width:650px;width:100%;margin:0 auto 24px}.suggestion{border:1px solid #333;background:#191919;border-radius:14px;color:#eee;text-align:left;padding:14px}.suggestion:hover{background:#222;border-color:#555}.suggestion b{display:block;font-size:14px;margin-bottom:3px}.suggestion span{font-size:12px;color:#999}.chat{display:flex;flex-direction:column;gap:18px;margin-bottom:18px}.message{max-width:90%;padding:13px 16px;border-radius:18px;white-space:pre-wrap;overflow-wrap:anywhere}.message.user{align-self:flex-end;background:#292929}.message.ai{align-self:flex-start;padding-left:0;padding-right:0;width:100%;max-width:100%}.who{font-size:12px;color:var(--accent);font-weight:700;margin-bottom:6px}.composer{position:sticky;bottom:0;padding:12px 0 7px;background:linear-gradient(transparent,#101010 18%)}.compose{border:1px solid #444;background:#1c1c1c;border-radius:23px;padding:10px;display:flex;gap:8px;align-items:flex-end;box-shadow:0 10px 30px #0004}.compose textarea{background:transparent;border:0;outline:0;resize:none;min-height:44px;max-height:180px;color:#fff;padding:10px;flex:1;min-width:0}.send{border:0;border-radius:50%;width:42px;height:42px;background:var(--accent);color:#111;font-size:21px;font-weight:800;flex-shrink:0}.send:disabled{opacity:.5}.hint{text-align:center;color:#777;font-size:11px;margin:10px 0 0}.status{text-align:center;color:#aaa;font-size:12px;min-height:18px;margin-top:7px}.footer{color:#777;text-align:center;font-size:11px;padding:0 0 8px}
+@media(max-width:700px){.layout{grid-template-columns:1fr}.sidebar{display:none}.top{height:56px;padding:0 16px}.workspace{padding:24px 14px 12px}.welcome{margin-top:40px}.welcome h1{font-size:34px}.suggestions{grid-template-columns:1fr}.message{max-width:95%}}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+ <div class="brand"><span class="brandmark"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 2.5 14.7 9l6.8 3-6.8 3-2.7 6.5L9.3 15 2.5 12l6.8-3L12 2.5Z"/></svg></span>Apex AI</div>
+ <button class="newchat" id="newChat">＋ &nbsp; New chat</button>
+ <div><div class="label">WORKSPACE</div><p style="color:#888;font-size:13px;padding:0 9px">A space for your questions and ideas.</p></div>
+ <div class="sidebottom">Apex AI · AI assistant</div>
+</aside>
+<main class="main">
+ <header class="top"><div><strong>Apex AI</strong><br><small>Ask anything</small></div><span class="pill">AI Assistant</span></header>
+ <section class="workspace">
+  <div class="welcome" id="welcome">
+   <div class="symbol"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2.5 14.7 9l6.8 3-6.8 3-2.7 6.5L9.3 15 2.5 12l6.8-3L12 2.5Z"/><path d="m19 2 .7 2.3L22 5l-2.3.7L19 8l-.7-2.3L16 5l2.3-.7L19 2Z"/></svg></div>
+   <h1>What’s on your mind?</h1><p>Ask a question, explore an idea, or create something new.</p>
+  </div>
+  <div class="suggestions" id="suggestions">
+   <button class="suggestion" data-prompt="Help me build a website step by step."><b>✦ Build something</b><span>Plan a website or app</span></button>
+   <button class="suggestion" data-prompt="Explain a difficult topic in simple language with an example."><b>⌁ Learn something</b><span>Get a clear explanation</span></button>
+   <button class="suggestion" data-prompt="Help me write a polished professional message."><b>✎ Write something</b><span>Improve your writing</span></button>
+   <button class="suggestion" data-prompt="Brainstorm five creative business ideas I could start small."><b>✧ Explore ideas</b><span>Think through new possibilities</span></button>
+  </div>
+  <div class="chat" id="chat" aria-live="polite"></div>
+  <div class="composer"><div class="compose"><textarea id="prompt" rows="1" aria-label="Message Apex AI" placeholder="Ask Apex AI anything..."></textarea><button class="send" id="send" aria-label="Send message">↑</button></div><div class="status" id="status" role="status"></div><div class="hint">Apex AI can make mistakes. Verify important information.</div></div>
+ </section>
+ <div class="footer">Apex AI</div>
+</main>
+</div>
+<script>
+const chat=document.getElementById("chat"),promptBox=document.getElementById("prompt"),sendButton=document.getElementById("send"),statusBox=document.getElementById("status");
+let history=[];
+function addMessage(role,text){const el=document.createElement("div");el.className="message "+(role==="user"?"user":"ai");if(role!=="user"){const who=document.createElement("div");who.className="who";who.textContent="Apex AI";el.appendChild(who)}const body=document.createElement("div");body.textContent=text;el.appendChild(body);chat.appendChild(el);el.scrollIntoView({behavior:"smooth",block:"nearest"});return body}
+async function sendMessage(textOverride){const text=(textOverride??promptBox.value).trim();if(!text||sendButton.disabled)return;document.getElementById("welcome").style.display="none";document.getElementById("suggestions").style.display="none";addMessage("user",text);promptBox.value="";history.push({role:"user",content:text});sendButton.disabled=true;statusBox.textContent="Thinking…";const answerEl=addMessage("assistant","");answerEl.textContent="Thinking…";try{const res=await fetch("/.netlify/functions/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:history})});const data=await res.json().catch(()=>({}));if(!res.ok)throw new Error(data.error||"The AI service is unavailable. Please try again.");if(!data.reply)throw new Error("The AI returned an empty answer. Please try again.");answerEl.textContent=data.reply;history.push({role:"assistant",content:data.reply});statusBox.textContent=""}catch(err){answerEl.textContent="Sorry, I couldn’t get an answer right now.";statusBox.textContent=err.message||"Check your connection and try again.";history.pop()}finally{sendButton.disabled=false;promptBox.focus()}}
+sendButton.addEventListener("click",()=>sendMessage());promptBox.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage()}});document.getElementById("newChat").addEventListener("click",()=>{chat.innerHTML="";history=[];statusBox.textContent="";promptBox.value="";document.getElementById("welcome").style.display="";document.getElementById("suggestions").style.display=""});document.querySelectorAll("[data-prompt]").forEach(b=>b.addEventListener("click",()=>{promptBox.value=b.dataset.prompt;sendMessage(b.dataset.prompt)}));
+</script>
+</body>
+</html>
